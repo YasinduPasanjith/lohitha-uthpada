@@ -38,21 +38,42 @@ export default function MusicPlayer() {
   }, [currentSongIndex]);
 
   useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
     if (isPlaying) {
-      audioRef.current?.play();
+      const playPromise = audio.play();
+      if (playPromise !== undefined) playPromise.catch(() => {});
     } else {
-      audioRef.current?.pause();
+      try {
+        audio.pause();
+      } catch (e) {
+        // ignore
+      }
     }
   }, [isPlaying]);
 
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.src = currentSong.url;
-      if (isPlaying) {
-        audioRef.current.play();
-      }
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    try {
+      audio.pause();
+    } catch (e) {
+      // ignore
     }
-  }, [currentSongIndex, currentSong.url]);
+
+    const url = mp3[currentSongIndex]?.url;
+    if (url) {
+      audio.src = url;
+      audio.load();
+    }
+
+    if (isPlaying) {
+      const playPromise = audio.play();
+      if (playPromise !== undefined) playPromise.catch(() => {});
+    }
+  }, [currentSongIndex, isPlaying]);
 
   const handlePlayPause = () => {
     setIsPlaying(!isPlaying);
