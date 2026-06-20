@@ -10,7 +10,7 @@ export const mp3 = [
   },
   { 
     name: 'Nuhansi Sad song',
-    url: '/audio/nuhansi-sad-song.mp3'
+    url: '/audio/Nuhansi-sad-song.mp3'
   },
   {
     name: 'Isuri- Song',
